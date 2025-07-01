@@ -13,11 +13,11 @@ required_packages = [
 ]
 
 def upgrade_pip():
-    os.system("python3 -m pip install --upgrade pip")
+    os.system("python3 -m pip install --upgrade pip --break-system-packages")
 
 def install_packages(packages):
     for package in packages:
-        os.system(f"pip3 install {package}")
+        os.system(f"pip3 install {package} --break-system-packages")
         print(f"DONE install [ {package} ]")
 
 def print_done_message():
