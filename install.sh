@@ -18,18 +18,17 @@ if [[ $choice == "1" ]]; then
   read -p "👤 Enter your numeric Telegram ID: " OWNER_ID
 
   sudo apt update -y
-  sudo apt install python3 python3-pip git -y
+  sudo apt install python3 python3-pip python3-venv git -y
 
   git clone $REPO_URL $FOLDER_NAME
   cd $FOLDER_NAME || exit
 
-  # Replace placeholders
   sed -i "s|TOKEN_HERE|$TOKEN|g" bot3.py
   sed -i "s|OWNER_ID_HERE|$OWNER_ID|g" bot3.py
 
+  chmod +x start.sh
   python3 SETUP.py
 
-  # Create systemd service using current path
   PROJECT_DIR=$(pwd)
 
   sudo bash -c "cat > /etc/systemd/system/$SERVICE_NAME.service << EOF
@@ -38,7 +37,7 @@ Description=Telegram Bot
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 $PROJECT_DIR/bot3.py
+ExecStart=$PROJECT_DIR/start.sh
 WorkingDirectory=$PROJECT_DIR
 Restart=always
 User=root
@@ -52,8 +51,8 @@ EOF"
   sudo systemctl enable $SERVICE_NAME
   sudo systemctl start $SERVICE_NAME
 
-  echo "✅ Installation completed successfully. The bot is running in the background."
-  echo "To view logs: journalctl -u $SERVICE_NAME -f"
+  echo '✅ Bot is installed and running in the background.'
+  echo 'To view logs: journalctl -u telegrambot -f'
 
 elif [[ $choice == "2" ]]; then
   echo "🗑 Uninstalling..."

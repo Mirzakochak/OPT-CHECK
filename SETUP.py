@@ -1,33 +1,34 @@
 import os
+import subprocess
+
+VENV_DIR = "venv"
 
 required_packages = [
-    "requests", 
-    "pyfiglet", 
-    "telebot", 
-    "faker", 
-    "beautifulsoup4", 
+    "requests",
+    "pyfiglet",
+    "telebot",
+    "faker",
+    "beautifulsoup4",
     "colorama",
     "pycountry",
     "cloudscraper",
     "user-agent"
 ]
 
-def upgrade_pip():
-    os.system("python3 -m pip install --upgrade pip --break-system-packages")
+def create_venv():
+    print("[+] Creating virtual environment...")
+    os.system(f"python3 -m venv {VENV_DIR}")
 
-def install_packages(packages):
-    for package in packages:
-        os.system(f"pip3 install {package} --break-system-packages")
+def install_packages():
+    pip_path = f"./{VENV_DIR}/bin/pip"
+    for package in required_packages:
+        subprocess.run([pip_path, "install", package], check=False)
         print(f"DONE install [ {package} ]")
 
-def print_done_message():
-    print("\nDone install :) ...... Mr.Ali")
-
-def print_done_message1():
-    input("\press any key to exit :)")
+def print_done():
+    print("\n✅ All packages installed in venv. To run the bot use ./start.sh")
 
 if __name__ == "__main__":
-    install_packages(required_packages)
-    upgrade_pip()
-    print_done_message()
-    print_done_message1()
+    create_venv()
+    install_packages()
+    print_done()
